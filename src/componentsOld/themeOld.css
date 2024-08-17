@@ -148,14 +148,6 @@ h3 {
     font-size: 1rem;
 }
 
-.form-control small {
-    color: #e53935;
-}
-
-.form-control.invalid input {
-    border-color: #e53935;
-}
-
 .form-checkbox {
     margin-bottom: 1rem;
 }
