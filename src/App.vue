@@ -1,34 +1,53 @@
 <template>
-  <div class="container">
-    <div class="card">
-      <h2>{{ $i18n('app.title') }}</h2>
-
-      <button class="btn" @click="changeLang">{{ $i18n('app.changeBtn') }}</button>
-      <button class="btn primary" @click="modal=true">Открыть модалку</button>
-
-      <teleport to="body">
-        <app-modal v-if="modal" @close="modal = false"></app-modal>
-      </teleport>
-    </div>
+  <the-navbar :visible="isAuth"></the-navbar>
+  <div class="container with-nav">
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import AppModal from './components/AppModal'
+import TheNavbar from './components/TheNavbar'
 
 export default {
-  inject: ['changeI18N'],
   data() {
     return {
-      modal: false
+      isAuth: true
     }
   },
   methods: {
-    changeLang() {
-      this.changeI18N('en')
-      this.$forceUpdate()
+    login() {
+      this.isAuth = true
+      if (this.$route.query.page) {
+        this.$router.push(this.$route.query.page)
+      } else {
+        this.$router.push('/dashboard')
+      }
+    },
+    logout() {
+      this.isAuth = false
+      this.$router.push({
+        path: '/login',
+        query: {
+          page: this.$route.path
+        }
+      })
     }
   },
-  components: { AppModal }
+  components: { TheNavbar },
+  provide() {
+    return {
+      login: this.login,
+      logout: this.logout,
+      emails: [
+        { id: '1', theme: 'Купил себе PlayStation 5' },
+        { id: '2', theme: 'Выучил Vue Router' },
+        { id: '3', theme: 'Хочу изучить весь Vue' },
+        { id: '4', theme: 'А следующий блок про Vuex!' },
+        { id: '5', theme: 'А что там на счет Vue Hooks?' }
+      ]
+    }
+  }
 }
 </script>
+
+<style></style>
