@@ -1,53 +1,28 @@
 <template>
-  <the-navbar :visible="isAuth"></the-navbar>
-  <div class="container with-nav">
-    <router-view></router-view>
-  </div>
+    <the-navbar></the-navbar>
+    <div class="container with-nav">
+        <div class="card">
+            <h1>Про Vuex</h1>
+            <h2>Счетчик {{ $store.getters['count/counter'] }}</h2>
+            <button class="btn primary" @click="$store.commit('count/increment')">Добавить</button>
+            <button class="btn danger" @click="$store.dispatch('count/incrementAsync', {value: 10, delay: 200})">Добавить 10</button>
+        </div>
+    </div>
 </template>
 
 <script>
-import TheNavbar from './components/TheNavbar'
+import { mapGetters, mapMutations, mapActions } from 'vuex'
+import TheNavbar from './TheNavbar'
 
 export default {
-  data() {
-    return {
-      isAuth: true
-    }
+  components: { TheNavbar },
+  computed: {
+    ...mapGetters(['uppercaseTitle']),
+    ...mapGetters('count', ['counter', 'doubleCounter'])
   },
   methods: {
-    login() {
-      this.isAuth = true
-      if (this.$route.query.page) {
-        this.$router.push(this.$route.query.page)
-      } else {
-        this.$router.push('/dashboard')
-      }
-    },
-    logout() {
-      this.isAuth = false
-      this.$router.push({
-        path: '/login',
-        query: {
-          page: this.$route.path
-        }
-      })
-    }
-  },
-  components: { TheNavbar },
-  provide() {
-    return {
-      login: this.login,
-      logout: this.logout,
-      emails: [
-        { id: '1', theme: 'Купил себе PlayStation 5' },
-        { id: '2', theme: 'Выучил Vue Router' },
-        { id: '3', theme: 'Хочу изучить весь Vue' },
-        { id: '4', theme: 'А следующий блок про Vuex!' },
-        { id: '5', theme: 'А что там на счет Vue Hooks?' }
-      ]
-    }
+    ...mapMutations({ add: 'count/increment' }),
+    ...mapActions('count', ['incrementAsync'])
   }
 }
 </script>
-
-<style></style>
